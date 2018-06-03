@@ -51,6 +51,13 @@ export default class Login extends Component {
             })
     }.bind(this)
 
+
+    /*
+        TODO:
+            - Add first name field
+            - Add last name field
+            - Add password verification field
+    */
     render() {
         return (
             <form className="form-signin" onSubmit={this.handleLogin}>
