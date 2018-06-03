@@ -48,9 +48,10 @@ export default class Home extends Component {
         return (
             <div className="container-full">
                 <div className="row">
-                    <div className="col col-sm-3">
-                        <FriendList />
+                    <div className="col col-sm-2">
+                        <FriendList activeUser={this.props.activeUser} viewHandler={this.props.viewHandler} />
                     </div>
+                    <div className="col col-sm-1"></div>
                     <div className="col content col-sm-6">
                         <div className="newsfeed">
                             <form>
@@ -68,7 +69,8 @@ export default class Home extends Component {
                             <PostList posts={this.state.posts} activeUser={this.props.activeUser} />
                         </div>
                     </div>
-                    <div className="col col-sm-3">
+                    <div className="col col-sm-1"></div>
+                    <div className="col col-sm-2">
                         <AdList />
                     </div>
                 </div>

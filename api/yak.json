@@ -2,21 +2,37 @@
   "users": [
     {
       "email": "steve@stevebrownlee.com",
+      "name": {
+        "first": "Steve",
+        "last": "Brownlee"
+      },
       "password": "me",
       "id": 1
     },
     {
       "email": "joe@shepherd.com",
+      "name": {
+        "first": "Joe",
+        "last": "Shepherd"
+      },
       "password": "me",
       "id": 2
     },
     {
       "email": "jisie@david.com",
+      "name": {
+        "first": "Jisie",
+        "last": "David"
+      },
       "password": "me",
       "id": 3
     },
     {
       "email": "meg@ducharme.com",
+      "name": {
+        "first": "Meg",
+        "last": "Ducharme"
+      },
       "password": "me",
       "id": 4
     }
@@ -93,6 +109,11 @@
       "message": "Choopin broccoli",
       "userId": "1",
       "id": 11
+    },
+    {
+      "message": "Testing the quick brown fox jumped over the lazy dog",
+      "userId": 4,
+      "id": 12
     }
   ],
   "events": [],

@@ -18,7 +18,7 @@ export default class Login extends Component {
     }.bind(this)
 
     // Handle for login submit
-    handleLogin = function (e) {
+    handleLogin = (e) => {
         e.preventDefault()
 
         // Determine if a user already exists in API
@@ -49,16 +49,28 @@ export default class Login extends Component {
                 }
 
             })
-    }.bind(this)
+    }
 
+
+    /*
+        TODO:
+            - Add first name field
+            - Add last name field
+            - Add password verification field
+    */
     render() {
         return (
             <form className="form-signin" onSubmit={this.handleLogin}>
                 <h1 className="h3 mb-3 font-weight-normal">Please sign in</h1>
                 <label htmlFor="inputEmail" className="sr-only">Email address</label>
-                <input onChange={this.handleFieldChange} type="email" id="email" className="form-control" placeholder="Email address" required="" autoFocus="" />
+                <input onChange={this.handleFieldChange} type="email"
+                       id="email" className="form-control"
+                       placeholder="Email address"
+                       required="" autoFocus="" />
                 <label htmlFor="inputPassword" className="sr-only">Password</label>
-                <input onChange={this.handleFieldChange} type="password" id="password" className="form-control" placeholder="Password" required="" />
+                <input onChange={this.handleFieldChange} type="password"
+                       id="password" className="form-control"
+                       placeholder="Password" required="" />
                 <div className="checkbox mb-3">
                     <input type="checkbox" value="remember-me" /> Remember me
                 </div>

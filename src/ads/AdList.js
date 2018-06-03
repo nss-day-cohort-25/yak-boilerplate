@@ -17,6 +17,7 @@ export default class AdList extends Component {
     render() {
         return (
             <div>
+                <h5 className="sideHeader">Ads chosen for you</h5>
                 {
                     this.state.ads.map(ad => <Ad key={ad.id} ad={ad} />)
                 }

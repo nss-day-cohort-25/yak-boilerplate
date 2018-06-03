@@ -5,6 +5,7 @@ import NavBar from './nav/NavBar';
 import Home from './newsfeed/Home';
 import Login from './auth/Login';
 import SearchResults from './search/SearchResults';
+import Profile from './user/Profile';
 
 class App extends Component {
 
@@ -12,7 +13,8 @@ class App extends Component {
     state = {
         currentView: "login",
         searchTerms: "",
-        activeUser: localStorage.getItem("yakId")
+        activeUser: localStorage.getItem("yakId"),
+        viewProps: null
     }
 
     // Search handler -> passed to NavBar
@@ -37,7 +39,7 @@ class App extends Component {
 
     // View switcher -> passed to NavBar and Login
     // Argument can be an event (via NavBar) or a string (via Login)
-    showView = function (e) {
+    showView = function (e, ...props) {
         let view = null
 
         // Click event triggered switching view
@@ -56,7 +58,8 @@ class App extends Component {
 
         // Update state to correct view will be rendered
         this.setState({
-            currentView: view
+            currentView: view,
+            viewProps: Object.assign({}, ...props)
         })
 
     }.bind(this)
@@ -78,9 +81,11 @@ class App extends Component {
                     return <Login showView={this.showView} setActiveUser={this.setActiveUser} />
                 case "results":
                     return <SearchResults terms={this.state.searchTerms} />
+                case "profile":
+                    return <Profile {...this.state.viewProps} />
                 case "home":
                 default:
-                    return <Home activeUser={this.state.activeUser} />
+                    return <Home activeUser={this.state.activeUser} viewHandler={this.showView} />
             }
         }
     }
