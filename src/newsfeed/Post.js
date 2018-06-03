@@ -4,6 +4,7 @@ import "./Post.css"
 /**
  * TODOs:
  *     - Only show the Like button if it's another user's post
+ *     - Instead of user email, show user's first and last name
  */
 export default class Post extends Component {
     render() {
