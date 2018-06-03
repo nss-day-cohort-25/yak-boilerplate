@@ -61,7 +61,14 @@ class App extends Component {
 
     }.bind(this)
 
-    // Function to determine which main view to render
+    /*
+        Function to determine which main view to render.
+
+        TODO:
+            1. Profile view
+            2. Register view
+            3. Create event view
+    */
     View = () => {
         if (localStorage.getItem("yakId") === null) {
             return <Login showView={this.showView} setActiveUser={this.setActiveUser} />

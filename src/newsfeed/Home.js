@@ -46,7 +46,6 @@ export default class Home extends Component {
 
     render() {
         return (
-
             <div className="container-full">
                 <div className="row">
                     <div className="col col-sm-3">

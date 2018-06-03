@@ -6,12 +6,20 @@ import "../newsfeed/Post.css"
 
 export default class SearchResults extends Component {
 
+    // Set initial state
     state = {
         posts: [],
         users: [],
         events: []
     }
 
+    /*
+        By putting the API search code in `componentDidMount()` you will note
+        that when you perform a search, and are viewing the results, you can't
+        search again without going back to the main view.
+
+        How might you solve this issue?
+    */
     componentDidMount() {
         const newState = {}
         fetch(`http://localhost:5001/posts?message_like=${encodeURI(this.props.terms)}&_expand=user`)
