@@ -34,7 +34,7 @@ export default class Profile extends Component {
 
 
     componentDidMount() {
-        fetch(`http://localhost:5001/posts?userId=${this.props.userId}&_expand=user&_page=1&_limit=5&_sort=id&_order=desc`)
+        fetch(`https://nss-kitty-purry.herokuapp.com/posts?userId=${this.props.userId}&_expand=user&_page=1&_limit=5&_sort=id&_order=desc`)
             .then(r => r.json())
             .then(posts => {
                 // If user has posts, grab their name from the first posts
@@ -46,7 +46,7 @@ export default class Profile extends Component {
 
                 // User had no posts, query user table directly
                 } else {
-                    fetch(`http://localhost:5001/users/${this.props.userId}`)
+                    fetch(`https://nss-kitty-purry.herokuapp.com/users/${this.props.userId}`)
                         .then(r => r.json())
                         .then(u => {
                             this.setState({

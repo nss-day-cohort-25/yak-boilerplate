@@ -9,7 +9,7 @@ export default class AdList extends Component {
     }
 
     componentDidMount () {
-        fetch(`http://localhost:5001/ads`)
+        fetch(`https://nss-kitty-purry.herokuapp.com/ads`)
             .then(r => r.json())
             .then(ads => this.setState({ads: ads}))
     }

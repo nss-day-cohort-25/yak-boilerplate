@@ -18,11 +18,11 @@ export default class FriendList extends Component {
     }
 
     componentDidMount() {
-        fetch(`http://localhost:5001/friends?requestingFriendId=${this.props.activeUser}`)
+        fetch(`https://nss-kitty-purry.herokuapp.com/friends?requestingFriendId=${this.props.activeUser}`)
             .then(r => r.json())
             .then(relationships => {
                 const queryString = this.params(relationships, "id", "acceptedFriendId")
-                return fetch(`http://localhost:5001/users?${queryString}`)
+                return fetch(`https://nss-kitty-purry.herokuapp.com/users?${queryString}`)
             })
             .then(r => r.json())
             .then(users => {

@@ -11,7 +11,7 @@ export default class Home extends Component {
         posts: []
     }
 
-    postMessage = (text) => fetch("http://localhost:5001/posts", {
+    postMessage = (text) => fetch("https://nss-kitty-purry.herokuapp.com/posts", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -22,7 +22,7 @@ export default class Home extends Component {
         })
     })
     .then(() => {
-        return fetch("http://localhost:5001/posts?_sort=id&_order=desc&_expand=user")
+        return fetch("https://nss-kitty-purry.herokuapp.com/posts?_sort=id&_order=desc&_expand=user")
     })
     .then(r => r.json())
     .then(posts => {
@@ -39,7 +39,7 @@ export default class Home extends Component {
     }
 
     componentDidMount() {
-        fetch(`http://localhost:5001/posts?userId=${this.props.activeUser}&_expand=user&_sort=id&_order=desc`)
+        fetch(`https://nss-kitty-purry.herokuapp.com/posts?userId=${this.props.activeUser}&_expand=user&_sort=id&_order=desc`)
             .then(r => r.json())
             .then(posts => this.setState({ posts: posts }))
     }

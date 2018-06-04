@@ -22,7 +22,7 @@ export default class Login extends Component {
         e.preventDefault()
 
         // Determine if a user already exists in API
-        fetch(`http://localhost:5001/users?email=${this.state.email}`)
+        fetch(`https://nss-kitty-purry.herokuapp.com/users?email=${this.state.email}`)
             .then(r => r.json())
             .then(user => {
                 // User exists. Set local storage, and show home view
@@ -33,7 +33,7 @@ export default class Login extends Component {
                 // User doesn't exist
                 } else {
                     // Create user in API
-                    fetch("http://localhost:5001/users", {
+                    fetch("https://nss-kitty-purry.herokuapp.com/users", {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json"

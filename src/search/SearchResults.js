@@ -20,11 +20,11 @@ export default class SearchResults extends Component {
 
     componentDidMount() {
         const newState = {}
-        fetch(`http://localhost:5001/posts?message_like=${encodeURI(this.props.terms)}&_expand=user`)
+        fetch(`https://nss-kitty-purry.herokuapp.com/posts?message_like=${encodeURI(this.props.terms)}&_expand=user`)
             .then(r => r.json())
             .then(posts => {
                 newState.posts = posts
-                return fetch(`http://localhost:5001/users?q=${encodeURI(this.props.terms)}`)
+                return fetch(`https://nss-kitty-purry.herokuapp.com/users?q=${encodeURI(this.props.terms)}`)
             })
             .then(r => r.json())
             .then(users => {
