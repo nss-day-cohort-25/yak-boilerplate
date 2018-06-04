@@ -1,7 +1,10 @@
 import React, { Component } from "react"
-import Post from "../newsfeed/Post";
+import $ from "jquery"
+import Post from "../newsfeed/Post"
+import modal from "jquery-modal/jquery.modal"
 import Avatar from "../images/avatar.png"
 import "./Profile.css"
+import "jquery-modal/jquery.modal.css"
 
 
 export default class Profile extends Component {
@@ -10,20 +13,56 @@ export default class Profile extends Component {
         name: ""
     }
 
+    addFriend = e => {
+        $("#friendModal").modal({
+            fadeDuration: 250,
+            fadeDelay: 1.5,
+            showClose: false,
+            blockerClass: ""
+          })
+        window.setTimeout(() => { $.modal.close() }, 3000)
+    }
+
+    follow = e => {
+        $("#followModal").modal({
+            fadeDuration: 250,
+            fadeDelay: 1.5,
+            showClose: false
+          })
+        window.setTimeout(() => { $.modal.close() }, 3000)
+    }
+
+
     componentDidMount() {
         fetch(`http://localhost:5001/posts?userId=${this.props.userId}&_expand=user&_page=1&_limit=5&_sort=id&_order=desc`)
             .then(r => r.json())
             .then(posts => {
-                this.setState({
-                    posts: posts,
-                    name: `${posts[0].user.name.first} ${posts[0].user.name.last}`
-                })
+                // If user has posts, grab their name from the first posts
+                if (posts.length) {
+                    this.setState({
+                        posts: posts,
+                        name: `${posts[0].user.name.first} ${posts[0].user.name.last}`
+                    })
+
+                // User had no posts, query user table directly
+                } else {
+                    fetch(`http://localhost:5001/users/${this.props.userId}`)
+                        .then(r => r.json())
+                        .then(u => {
+                            this.setState({
+                                posts: posts,
+                                name: `${u.name.first} ${u.name.last}`
+                            })
+                        })
+                }
             })
     }
 
     render() {
         return (
             <div className="container-full">
+                <span id="friendModal" className="modal">Friend request sent!</span>
+                <span id="followModal" className="modal">You have successfully followed {this.state.name}</span>
                 <div className="row">
                     <div className="col col-sm-1">
                     </div>
@@ -34,10 +73,14 @@ export default class Profile extends Component {
 
                             <div className="btn-toolbar" role="toolbar">
                                 <div className="btn-group mr-2" role="group">
-                                    <button type="button" className="btn btn-outline-primary">Follow</button>
+                                    <button onClick={this.follow} type="button" className="btn btn-outline-primary">
+                                        Follow
+                                    </button>
                                 </div>
                                 <div className="btn-group" role="group">
-                                    <button type="button" className="btn btn-outline-primary">Add Friend</button>
+                                    <button onClick={this.addFriend} type="button" className="btn btn-outline-primary">
+                                        Add Friend
+                                    </button>
                                 </div>
                             </div>
 

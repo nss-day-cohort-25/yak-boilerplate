@@ -37,7 +37,6 @@ export default class SearchResults extends Component {
         return (
             <div className="searchResults">
                 <h1>Search Results</h1>
-
                 {
                     this.state.posts.map(p =>
                         <div className="card post" key={p.id}>

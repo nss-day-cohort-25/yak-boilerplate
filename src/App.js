@@ -65,12 +65,14 @@ class App extends Component {
     }.bind(this)
 
     /*
-        Function to determine which main view to render.
+        Function to determine which main view to render. This, very likely,
+        should be broken out into its own module.
 
         TODO:
             1. Profile view
             2. Register view
             3. Create event view
+            4. Make this function its own module
     */
     View = () => {
         if (localStorage.getItem("yakId") === null) {
@@ -78,14 +80,19 @@ class App extends Component {
         } else {
             switch (this.state.currentView) {
                 case "logout":
-                    return <Login showView={this.showView} setActiveUser={this.setActiveUser} />
+                    return <Login showView={this.showView}
+                                  setActiveUser={this.setActiveUser} />
                 case "results":
-                    return <SearchResults terms={this.state.searchTerms} activeUser={this.state.activeUser} />
+                    return <SearchResults terms={this.state.searchTerms}
+                                          activeUser={this.state.activeUser} />
                 case "profile":
-                    return <Profile {...this.state.viewProps} activeUser={this.state.activeUser} />
+                    return <Profile {...this.state.viewProps}
+                                    activeUser={this.state.activeUser}
+                                    viewHandler={this.showView} />
                 case "home":
                 default:
-                    return <Home activeUser={this.state.activeUser} viewHandler={this.showView} />
+                    return <Home activeUser={this.state.activeUser}
+                                 viewHandler={this.showView} />
             }
         }
     }
