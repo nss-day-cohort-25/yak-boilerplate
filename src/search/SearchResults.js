@@ -18,27 +18,12 @@ export default class SearchResults extends Component {
         this.props.viewHandler("profile", {userId: id})
     }
 
-    componentDidMount() {
-        const newState = {}
-        fetch(`https://nss-kitty-purry.herokuapp.com/posts?message_like=${encodeURI(this.props.terms)}&_expand=user`)
-            .then(r => r.json())
-            .then(posts => {
-                newState.posts = posts
-                return fetch(`https://nss-kitty-purry.herokuapp.com/users?q=${encodeURI(this.props.terms)}`)
-            })
-            .then(r => r.json())
-            .then(users => {
-                newState.users = users
-                this.setState(newState)
-            })
-    }
-
     render() {
         return (
             <div className="searchResults">
                 <h1>Search Results</h1>
                 {
-                    this.state.posts.map(p =>
+                    this.props.foundItems.posts.map(p =>
                         <div className="card post" key={p.id}>
                             <div className="card-body">
                                 <h5 className="card-title">By {p.user.email}</h5>
@@ -52,7 +37,7 @@ export default class SearchResults extends Component {
                 }
 
                 {
-                    this.state.users.map(u =>
+                    this.props.foundItems.users.map(u =>
                         <div className="card post" key={u.id}>
                             <img className="card-img-top avatar" src={Avatar} alt="Generic person image" />
                             <div className="card-body">

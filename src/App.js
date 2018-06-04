@@ -14,15 +14,37 @@ class App extends Component {
         currentView: "login",
         searchTerms: "",
         activeUser: localStorage.getItem("yakId"),
-        viewProps: null
+        foundItems: {
+            posts: [],
+            users: []
+        }
     }
+
+    SearchingView = () => "<h1>Searching...</h1>"
 
     // Search handler -> passed to NavBar
     performSearch = function (terms) {
         this.setState({
             searchTerms: terms,
-            currentView: "results"
+            currentView: "searching"
         })
+
+        const futureFoundItems = {}
+
+        fetch(`http://localhost:5001/posts?message_like=${encodeURI(terms)}&_expand=user`)
+            .then(r => r.json())
+            .then(posts => {
+                futureFoundItems.posts = posts
+                return fetch(`http://localhost:5001/users?q=${encodeURI(terms)}`)
+            })
+            .then(r => r.json())
+            .then(users => {
+                futureFoundItems.users = users
+                this.setState({
+                    foundItems: futureFoundItems,
+                    currentView: "results"
+                })
+            })
     }.bind(this)
 
     // Function to update local storage and set activeUser state
@@ -79,16 +101,13 @@ class App extends Component {
             return <Login showView={this.showView} setActiveUser={this.setActiveUser} />
         } else {
             switch (this.state.currentView) {
+                case "searching":
+                    return <this.SearchingView />
                 case "logout":
                     return <Login showView={this.showView}
                                   setActiveUser={this.setActiveUser} />
                 case "results":
-                    return <SearchResults terms={this.state.searchTerms}
-                                          activeUser={this.state.activeUser} />
-                case "profile":
-                    return <Profile {...this.state.viewProps}
-                                    activeUser={this.state.activeUser}
-                                    viewHandler={this.showView} />
+                    return <SearchResults foundItems={this.state.foundItems} />
                 case "home":
                 default:
                     return <Home activeUser={this.state.activeUser}
