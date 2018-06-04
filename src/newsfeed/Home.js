@@ -1,8 +1,8 @@
 import React, { Component } from "react"
 import "./Home.css"
-import PostList from "./PostList";
-import AdList from "../ads/AdList";
-import FriendList from "../friends/FriendList";
+import PostList from "./PostList"
+import AdList from "../ads/AdList"
+import FriendList from "../friends/FriendList"
 
 export default class Home extends Component {
 
@@ -65,7 +65,6 @@ export default class Home extends Component {
                                 </div>
                                 <button type="button" onClick={this.postMessage} className="btn btn-info btn-lg">Post</button>
                             </form>
-
                             <PostList posts={this.state.posts} activeUser={this.props.activeUser} />
                         </div>
                     </div>
@@ -75,9 +74,6 @@ export default class Home extends Component {
                     </div>
                 </div>
             </div>
-
-
-
         )
     }
 }

@@ -13,13 +13,11 @@ export default class SearchResults extends Component {
         events: []
     }
 
-    /*
-        By putting the API search code in `componentDidMount()` you will note
-        that when you perform a search, and are viewing the results, you can't
-        search again without going back to the main view.
+    showProfile = (e) => {
+        const id = e.target.id.split("--")[1]
+        this.props.viewHandler("profile", {userId: id})
+    }
 
-        How might you solve this issue?
-    */
     componentDidMount() {
         const newState = {}
         fetch(`http://localhost:5001/posts?message_like=${encodeURI(this.props.terms)}&_expand=user`)
@@ -60,7 +58,9 @@ export default class SearchResults extends Component {
                             <img className="card-img-top avatar" src={Avatar} alt="Generic person image" />
                             <div className="card-body">
                                 <h5 className="card-title">{u.email}</h5>
-                                <a href="#" className="btn btn-outline-success">View profile</a>
+                                <a href="#" onClick={this.showProfile}
+                                   id={`user--${u.id}`}
+                                   className="btn btn-outline-success">View profile</a>
                             </div>
                         </div>
                     )
