@@ -64,8 +64,18 @@
     },
     {
       "id": 4,
+      "requestingFriendId": 1,
+      "acceptedFriendId": 5
+    },
+    {
       "requestingFriendId": 5,
-      "acceptedFriendId": 1
+      "acceptedFriendId": 4,
+      "id": 5
+    },
+    {
+      "requestingFriendId": 5,
+      "acceptedFriendId": 3,
+      "id": 6
     }
   ],
   "posts": [

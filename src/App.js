@@ -66,7 +66,7 @@ class App extends Component {
 
     // View switcher -> passed to NavBar and Login
     // Argument can be an event (via NavBar) or a string (via Login)
-    showView = function (e, ...props) {
+    showView = (e, ...props) => {
         let view = null
 
         // Click event triggered switching view
@@ -88,8 +88,7 @@ class App extends Component {
             currentView: view,
             viewProps: Object.assign({}, ...props)
         })
-
-    }.bind(this)
+    }
 
     /*
         Function to determine which main view to render. This, very likely,

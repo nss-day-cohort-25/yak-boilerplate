@@ -13,18 +13,47 @@ export default class FriendList extends Component {
 
     params = (res, fk, prop) => res.map(r => `${fk}=${r[prop]}`).join("&")
 
+    unique = function* (arr) {
+        const map = new Map()
+        let i = 0
+
+        while (i < arr.length) {
+            const key = arr[i]
+            if (!map.has(key) && map.set(key, 1)) yield arr[i]
+            i++
+        }
+    }.bind(this)
+
     showProfile = (e) => {
         const id = e.target.id.split("--")[1]
         this.props.viewHandler("profile", {userId: id})
     }
 
     componentDidMount() {
-        fetch(`${Settings.remoteURL}/friends?requestingFriendId=${this.props.activeUser}&acceptingFriendId=${this.props.activeUser}`)
+        console.log("FriendList componentDidMount")
+
+        let allFriendships = []
+
+        fetch(`${Settings.remoteURL}/friends?acceptedFriendId=${this.props.activeUser}`)
+            .then(r => r.json())
+            .then(relationships => {
+                allFriendships = allFriendships.concat(relationships.map(r => r.requestingFriendId))
+                return fetch(`${Settings.remoteURL}/friends?requestingFriendId=${this.props.activeUser}`)
+            })
             .then(r => r.json())
             .then(relationships => {
                 if (relationships.length) {
-                    const queryString = this.params(relationships, "id", "acceptedFriendId")
-                    fetch(`${Settings.remoteURL}/users?${queryString}`)
+                    /*
+                        allFriendships gets concat run with the new array, then only unique values
+                        are extracted, converted from Map to an array, then put in URL query string
+                        format, and joined together with &
+                    */
+                    allFriendships = [...this.unique(allFriendships.concat(relationships.map(r => r.acceptedFriendId)))]
+                        .map(id => `id=${id}`)
+                        .join("&")
+
+                    // Query users table for all matching friends
+                    fetch(`${Settings.remoteURL}/users?${allFriendships}`)
                         .then(r => r.json())
                         .then(users => {
                             this.setState({ friends: users })

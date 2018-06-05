@@ -15,6 +15,16 @@ export default class Profile extends Component {
     }
 
     addFriend = e => {
+        fetch(`${Settings.remoteURL}/friends`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                requestingFriendId: parseInt(this.props.activeUser),
+                acceptedFriendId: parseInt(this.props.userId)
+            })
+        })
         $("#friendModal").modal({
             fadeDuration: 250,
             fadeDelay: 1.5,
