@@ -82,6 +82,12 @@
       "acceptedFriendId": 5,
       "id": 6,
       "pending": true
+    },
+    {
+      "requestingFriendId": 4,
+      "acceptedFriendId": 5,
+      "id": 6,
+      "pending": true
     }
   ],
   "posts": [
