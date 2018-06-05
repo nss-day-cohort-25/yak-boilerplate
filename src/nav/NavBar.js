@@ -55,11 +55,9 @@ export default class NavBar extends Component {
                     aria-label="Search" />
                 <ul className="navbar-nav px-3">
                     <li className="nav-item text-nowrap">
-                        <a className="nav-link" id="nav__profile"
-                            onClick={this.props.viewHandler} href="#">
-                            <img id="navimg__profile"
-                                 onClick={()=>$(".profileMenu").slideToggle(333)}
-                                 src={profilepic} style={{ height: `30px` }} />
+
+                        <a href="#" className="notif" id="nav__profile" onClick={()=>$(".profileMenu").slideToggle(333)}>
+                            <span className="num">2</span>
                         </a>
                     </li>
                 </ul>

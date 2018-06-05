@@ -11,8 +11,6 @@ export default class FriendList extends Component {
         friends: []
     }
 
-    params = (res, fk, prop) => res.map(r => `${fk}=${r[prop]}`).join("&")
-
     unique = function* (arr) {
         const map = new Map()
         let i = 0
