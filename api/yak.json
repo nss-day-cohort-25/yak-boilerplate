@@ -50,38 +50,44 @@
     {
       "id": 1,
       "requestingFriendId": 1,
-      "acceptedFriendId": 4
+      "acceptedFriendId": 4,
+      "pending": false
     },
     {
       "id": 2,
       "requestingFriendId": 1,
-      "acceptedFriendId": 3
+      "acceptedFriendId": 3,
+      "pending": false
     },
     {
       "id": 3,
       "requestingFriendId": 1,
-      "acceptedFriendId": 2
+      "acceptedFriendId": 2,
+      "pending": false
     },
     {
       "id": 4,
       "requestingFriendId": 1,
-      "acceptedFriendId": 5
+      "acceptedFriendId": 5,
+      "pending": false
     },
     {
       "requestingFriendId": 5,
       "acceptedFriendId": 4,
-      "id": 5
+      "id": 5,
+      "pending": false
     },
     {
-      "requestingFriendId": 5,
-      "acceptedFriendId": 3,
-      "id": 6
+      "requestingFriendId": 3,
+      "acceptedFriendId": 5,
+      "id": 6,
+      "pending": true
     }
   ],
   "posts": [
     {
       "message": "First attempt",
-      "userId": "1",
+      "userId": 1,
       "id": 1
     },
     {
@@ -91,47 +97,47 @@
     },
     {
       "message": "What??",
-      "userId": "1",
+      "userId": 1,
       "id": 3
     },
     {
       "message": "Hi, I'm steve",
-      "userId": "1",
+      "userId": 1,
       "id": 4
     },
     {
       "message": "Different relationships around version couple basic",
-      "userId": "1",
+      "userId": 1,
       "id": 5
     },
     {
       "message": "123",
-      "userId": "1",
+      "userId": 1,
       "id": 6
     },
     {
       "message": "abc",
-      "userId": "1",
+      "userId": 1,
       "id": 7
     },
     {
       "message": "321",
-      "userId": "1",
+      "userId": 1,
       "id": 8
     },
     {
       "message": "tree",
-      "userId": "1",
+      "userId": 1,
       "id": 9
     },
     {
       "message": "r2vwgrvgr",
-      "userId": "1",
+      "userId": 1,
       "id": 10
     },
     {
       "message": "Choopin broccoli",
-      "userId": "1",
+      "userId": 1,
       "id": 11
     },
     {

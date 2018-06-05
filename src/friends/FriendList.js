@@ -32,11 +32,11 @@ export default class FriendList extends Component {
 
         let allFriendships = []
 
-        fetch(`${Settings.remoteURL}/friends?acceptedFriendId=${this.props.activeUser}`)
+        fetch(`${Settings.remoteURL}/friends?acceptedFriendId=${this.props.activeUser}&pending=false`)
             .then(r => r.json())
             .then(relationships => {
                 allFriendships = allFriendships.concat(relationships.map(r => r.requestingFriendId))
-                return fetch(`${Settings.remoteURL}/friends?requestingFriendId=${this.props.activeUser}`)
+                return fetch(`${Settings.remoteURL}/friends?requestingFriendId=${this.props.activeUser}&pending=false`)
             })
             .then(r => r.json())
             .then(relationships => {
