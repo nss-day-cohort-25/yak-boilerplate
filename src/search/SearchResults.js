@@ -5,7 +5,6 @@ import "../newsfeed/Post.css"
 
 
 export default class SearchResults extends Component {
-
     // Set initial state
     state = {
         posts: [],

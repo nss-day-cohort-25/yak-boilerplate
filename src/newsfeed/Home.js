@@ -1,4 +1,5 @@
 import React, { Component } from "react"
+import Settings from "../Settings"
 import "./Home.css"
 import PostList from "./PostList"
 import AdList from "../ads/AdList"
@@ -11,7 +12,7 @@ export default class Home extends Component {
         posts: []
     }
 
-    postMessage = (text) => fetch("https://nss-kitty-purry.herokuapp.com/posts", {
+    postMessage = (text) => fetch(`${Settings.remoteURL}/posts`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -22,7 +23,7 @@ export default class Home extends Component {
         })
     })
     .then(() => {
-        return fetch("https://nss-kitty-purry.herokuapp.com/posts?_sort=id&_order=desc&_expand=user")
+        return fetch(`${Settings.remoteURL}/posts?_sort=id&_order=desc&_expand=user&userId=${this.props.activeUser}`)
     })
     .then(r => r.json())
     .then(posts => {
@@ -39,7 +40,7 @@ export default class Home extends Component {
     }
 
     componentDidMount() {
-        fetch(`https://nss-kitty-purry.herokuapp.com/posts?userId=${this.props.activeUser}&_expand=user&_sort=id&_order=desc`)
+        fetch(`${Settings.remoteURL}/posts?userId=${this.props.activeUser}&_expand=user&_sort=id&_order=desc`)
             .then(r => r.json())
             .then(posts => this.setState({ posts: posts }))
     }

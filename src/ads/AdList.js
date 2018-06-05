@@ -1,5 +1,7 @@
 import React, { Component } from "react"
-import Ad from "./Ad";
+import Settings from "../Settings"
+import Ad from "./Ad"
+
 
 
 export default class AdList extends Component {
@@ -9,7 +11,7 @@ export default class AdList extends Component {
     }
 
     componentDidMount () {
-        fetch(`https://nss-kitty-purry.herokuapp.com/ads`)
+        fetch(`${Settings.remoteURL}/ads`)
             .then(r => r.json())
             .then(ads => this.setState({ads: ads}))
     }

@@ -28,6 +28,15 @@
       "id": 3
     },
     {
+      "email": "hannah@hall.com",
+      "name": {
+        "first": "Hannah",
+        "last": "Hall"
+      },
+      "password": "me",
+      "id": 5
+    },
+    {
       "email": "meg@ducharme.com",
       "name": {
         "first": "Meg",
@@ -44,14 +53,19 @@
       "acceptedFriendId": 4
     },
     {
-      "id": 1,
+      "id": 2,
       "requestingFriendId": 1,
       "acceptedFriendId": 3
     },
     {
-      "id": 1,
+      "id": 3,
       "requestingFriendId": 1,
       "acceptedFriendId": 2
+    },
+    {
+      "id": 4,
+      "requestingFriendId": 5,
+      "acceptedFriendId": 1
     }
   ],
   "posts": [
@@ -114,6 +128,16 @@
       "message": "Testing the quick brown fox jumped over the lazy dog",
       "userId": 4,
       "id": 12
+    },
+    {
+      "message": "Hi, I'm hannah",
+      "userId": 5,
+      "id": 13
+    },
+    {
+      "message": "I taught at Nashville Software School",
+      "userId": 5,
+      "id": 14
     }
   ],
   "events": [],

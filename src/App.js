@@ -6,6 +6,7 @@ import Home from './newsfeed/Home';
 import Login from './auth/Login';
 import SearchResults from './search/SearchResults';
 import Profile from './user/Profile';
+import Register from './auth/Register';
 
 class App extends Component {
 
@@ -20,7 +21,7 @@ class App extends Component {
         }
     }
 
-    SearchingView = () => "<h1>Searching...</h1>"
+    SearchingView = () => (<h1 style={{ marginTop: `125px` }}>Searching...</h1>)
 
     // Search handler -> passed to NavBar
     performSearch = function (terms) {
@@ -40,10 +41,14 @@ class App extends Component {
             .then(r => r.json())
             .then(users => {
                 futureFoundItems.users = users
-                this.setState({
-                    foundItems: futureFoundItems,
-                    currentView: "results"
-                })
+
+                setTimeout(() => {
+                    this.setState({
+                        foundItems: futureFoundItems,
+                        currentView: "results"
+                    })
+
+                }, 1000);
             })
     }.bind(this)
 
@@ -97,17 +102,26 @@ class App extends Component {
             4. Make this function its own module
     */
     View = () => {
-        if (localStorage.getItem("yakId") === null) {
-            return <Login showView={this.showView} setActiveUser={this.setActiveUser} />
+        if (localStorage.getItem("yakId") === null && this.state.currentView !== "register") {
+            return <Login showView={this.showView}
+                          setActiveUser={this.setActiveUser} />
+        } else if (localStorage.getItem("yakId") === null && this.state.currentView === "register") {
+            return <Register showView={this.showView}
+                             setActiveUser={this.setActiveUser} />
         } else {
             switch (this.state.currentView) {
                 case "searching":
                     return <this.SearchingView />
+                case "profile":
+                    return <Profile {...this.state.viewProps}
+                                    activeUser={this.state.activeUser}
+                                    viewHandler={this.showView} />
                 case "logout":
                     return <Login showView={this.showView}
                                   setActiveUser={this.setActiveUser} />
                 case "results":
-                    return <SearchResults foundItems={this.state.foundItems} />
+                    return <SearchResults foundItems={this.state.foundItems}
+                                          viewHandler={this.showView} />
                 case "home":
                 default:
                     return <Home activeUser={this.state.activeUser}

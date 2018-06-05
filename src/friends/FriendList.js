@@ -1,6 +1,7 @@
 import React, { Component } from "react"
 import Avatar from "../images/avatar.png"
 import "./FriendList.css"
+import Settings from "../Settings"
 
 
 export default class FriendList extends Component {
@@ -18,15 +19,17 @@ export default class FriendList extends Component {
     }
 
     componentDidMount() {
-        fetch(`https://nss-kitty-purry.herokuapp.com/friends?requestingFriendId=${this.props.activeUser}`)
+        fetch(`${Settings.remoteURL}/friends?requestingFriendId=${this.props.activeUser}&acceptingFriendId=${this.props.activeUser}`)
             .then(r => r.json())
             .then(relationships => {
-                const queryString = this.params(relationships, "id", "acceptedFriendId")
-                return fetch(`https://nss-kitty-purry.herokuapp.com/users?${queryString}`)
-            })
-            .then(r => r.json())
-            .then(users => {
-                this.setState({ friends: users })
+                if (relationships.length) {
+                    const queryString = this.params(relationships, "id", "acceptedFriendId")
+                    fetch(`${Settings.remoteURL}/users?${queryString}`)
+                        .then(r => r.json())
+                        .then(users => {
+                            this.setState({ friends: users })
+                        })
+                }
             })
     }
 
