@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import Settings from "./Settings"
 import "bootstrap/dist/css/bootstrap.min.css"
 import './App.css'
 import NavBar from './nav/NavBar';
@@ -9,19 +10,60 @@ import Profile from './user/Profile';
 import Register from './auth/Register';
 
 class App extends Component {
+    constructor (props) {
+        super(props)
 
-    // Set initial state
-    state = {
-        currentView: "login",
-        searchTerms: "",
-        activeUser: localStorage.getItem("yakId"),
-        foundItems: {
-            posts: [],
-            users: []
+        // Set initial state
+        this.state = {
+            currentView: "login",
+            searchTerms: "",
+            activeUser: localStorage.getItem("yakId"),
+            foundItems: {
+                posts: [],
+                users: []
+            },
+            notifications: []
         }
+
+        this.getNotifications()
+
     }
 
+
     SearchingView = () => (<h1 style={{ marginTop: `125px` }}>Searching...</h1>)
+
+
+    getNotifications = () => {
+        let notes = []
+
+        // Any pending friend requests
+        return fetch(`${Settings.remoteURL}/friends?acceptedFriendId=${this.state.activeUser}&pending=true`)
+            .then(r => r.json())
+            .then(relationships => {
+                if (relationships.length) {
+                    const allFriendships = relationships.map(r => r.requestingFriendId)
+                            .map(id => `id=${id}`)
+                            .join("&")
+
+                    // Query users table for all matching friends
+                    fetch(`${Settings.remoteURL}/users?${allFriendships}`)
+                        .then(r => r.json())
+                        .then(users => {
+                            notes = notes.concat(users.map(u => `${u.name.first} ${u.name.last} has sent you a friend request`))
+                            this.setState({
+                                notifications: notes
+                            })
+                        })
+                }
+
+            })
+
+
+        // A friend has sent a private message
+
+        // A friend has created a new event
+    }
+
 
     // Search handler -> passed to NavBar
     performSearch = function (terms) {
@@ -32,11 +74,11 @@ class App extends Component {
 
         const futureFoundItems = {}
 
-        fetch(`http://localhost:5001/posts?message_like=${encodeURI(terms)}&_expand=user`)
+        fetch(`${Settings.remoteURL}/posts?message_like=${encodeURI(terms)}&_expand=user`)
             .then(r => r.json())
             .then(posts => {
                 futureFoundItems.posts = posts
-                return fetch(`http://localhost:5001/users?q=${encodeURI(terms)}`)
+                return fetch(`${Settings.remoteURL}/users?q=${encodeURI(terms)}`)
             })
             .then(r => r.json())
             .then(users => {
@@ -60,7 +102,8 @@ class App extends Component {
             localStorage.removeItem("yakId")
         }
         this.setState({
-            activeUser: val
+            activeUser: val,
+            notifications: []
         })
     }
 
@@ -80,14 +123,22 @@ class App extends Component {
 
         // If user clicked logout in nav, empty local storage and update activeUser state
         if (view === "logout") {
-            this.setActiveUser(null)
+            // Update state to correct view will be rendered
+            this.setState({
+                currentView: "logout",
+                activeUser: null,
+                notifications: [],
+                viewProps: Object.assign({}, ...props)
+            })
+        } else {
+            // Update state to correct view will be rendered
+            this.setState({
+                currentView: view,
+                viewProps: Object.assign({}, ...props)
+            })
+            this.getNotifications()
         }
 
-        // Update state to correct view will be rendered
-        this.setState({
-            currentView: view,
-            viewProps: Object.assign({}, ...props)
-        })
     }
 
     /*
@@ -136,6 +187,7 @@ class App extends Component {
                     searchHandler={this.performSearch}
                     activeUser={this.state.activeUser}
                     setActiveUser={this.setActiveUser}
+                    notifications={this.state.notifications}
                 />
 
                 {this.View()}

@@ -1,8 +1,6 @@
 import React, { Component } from "react"
-import Settings from "../Settings"
 import yak from "../images/yak.png"
 import $ from "jquery"
-import profilepic from "../images/profile.png"
 import "./NavBar.css"
 
 
@@ -10,8 +8,7 @@ export default class NavBar extends Component {
 
     // Set initial state
     state = {
-        searchTerms: "",
-        notifications: []
+        searchTerms: ""
     }
 
     /**
@@ -33,40 +30,6 @@ export default class NavBar extends Component {
             return <a className="nav-link" id="nav__logout"
                 onClick={this.props.viewHandler} href="#">Logout</a>
         }
-    }
-
-    getNotifications = () => {
-        let notes = []
-
-        // Any pending friend requests
-        fetch(`${Settings.remoteURL}/friends?acceptedFriendId=${this.props.activeUser}&pending=true`)
-            .then(r => r.json())
-            .then(relationships => {
-
-                const allFriendships = relationships.map(r => r.requestingFriendId)
-                        .map(id => `id=${id}`)
-                        .join("&")
-
-                // Query users table for all matching friends
-                fetch(`${Settings.remoteURL}/users?${allFriendships}`)
-                    .then(r => r.json())
-                    .then(users => {
-                        notes = notes.concat(users.map(u => `${u.name.first} ${u.name.last} has sent you a friend request`))
-                        this.setState({
-                            notifications: notes
-                        })
-                    })
-
-            })
-
-
-        // A friend has sent a private message
-
-        // A friend has created a new event
-    }
-
-    componentDidMount () {
-        this.getNotifications()
     }
 
     handleFieldChange = (evt) => {
@@ -91,9 +54,8 @@ export default class NavBar extends Component {
                     aria-label="Search" />
                 <ul className="navbar-nav px-3">
                     <li className="nav-item text-nowrap">
-
                         <a href="#" className="notif" id="nav__profile" onClick={()=>$(".profileMenu").slideToggle(333)}>
-                            <span className="num">{this.state.notifications.length}</span>
+                            <span className="num">{this.props.notifications.length}</span>
                         </a>
                     </li>
                 </ul>
@@ -105,7 +67,7 @@ export default class NavBar extends Component {
                 <article className="profileMenu">
                     <section className="profileMenu__item">
                         {
-                            this.state.notifications.map((n, idx) =>
+                            this.props.notifications.map((n, idx) =>
                                 <div key={idx}><a title="notifications" id="nav__notifications" href="#">{n}</a></div>)
                         }
                     </section>
