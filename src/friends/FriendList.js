@@ -20,11 +20,11 @@ export default class FriendList extends Component {
             if (!map.has(key) && map.set(key, 1)) yield arr[i]
             i++
         }
-    }.bind(this)
+    }
 
     showProfile = (e) => {
         const id = e.target.id.split("--")[1]
-        this.props.viewHandler("profile", {userId: id})
+        this.props.viewHandler("profile", {userId: id, isFriend: true})
     }
 
     componentDidMount() {

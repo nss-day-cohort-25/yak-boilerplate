@@ -36,7 +36,7 @@ export default class Register extends Component {
                 // User doesn't exist
                 } else {
                     // Create user in API
-                    fetch("${Settings.remoteURL}/users", {
+                    fetch(`${Settings.remoteURL}/users`, {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json"

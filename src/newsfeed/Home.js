@@ -19,7 +19,7 @@ export default class Home extends Component {
         },
         body: JSON.stringify({
             message: this.state.message,
-            userId: parseInt(this.props.activeUser)
+            userId: parseInt(this.props.activeUser, 10)
         })
     })
     .then(() => {

@@ -60,12 +60,6 @@
       "pending": false
     },
     {
-      "id": 3,
-      "requestingFriendId": 1,
-      "acceptedFriendId": 2,
-      "pending": false
-    },
-    {
       "id": 4,
       "requestingFriendId": 1,
       "acceptedFriendId": 5,

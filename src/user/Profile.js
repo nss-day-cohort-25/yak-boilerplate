@@ -14,6 +14,21 @@ export default class Profile extends Component {
         name: ""
     }
 
+    FriendButton = () => {
+        if (
+            this.props.activeUser !== this.props.userId &&
+            !this.props.isFriend
+        ) {
+            return (
+            <button onClick={this.addFriend} type="button" className="btn btn-outline-primary">
+                Add Friend
+            </button>
+            )
+        } else {
+            return (<div></div>)
+        }
+    }
+
     addFriend = e => {
         fetch(`${Settings.remoteURL}/friends`, {
             method: "POST",
@@ -21,8 +36,9 @@ export default class Profile extends Component {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                requestingFriendId: parseInt(this.props.activeUser),
-                acceptedFriendId: parseInt(this.props.userId)
+                requestingFriendId: parseInt(this.props.activeUser, 10),
+                acceptedFriendId: parseInt(this.props.userId, 10),
+                pending: true
             })
         })
         $("#friendModal").modal({
@@ -30,7 +46,7 @@ export default class Profile extends Component {
             fadeDelay: 1.5,
             showClose: false,
             blockerClass: ""
-          })
+        })
         window.setTimeout(() => { $.modal.close() }, 3000)
     }
 
@@ -39,7 +55,7 @@ export default class Profile extends Component {
             fadeDuration: 250,
             fadeDelay: 1.5,
             showClose: false
-          })
+        })
         window.setTimeout(() => { $.modal.close() }, 3000)
     }
 
@@ -55,7 +71,7 @@ export default class Profile extends Component {
                         name: `${posts[0].user.name.first} ${posts[0].user.name.last}`
                     })
 
-                // User had no posts, query user table directly
+                    // User had no posts, query user table directly
                 } else {
                     fetch(`${Settings.remoteURL}/users/${this.props.userId}`)
                         .then(r => r.json())
@@ -89,9 +105,7 @@ export default class Profile extends Component {
                                     </button>
                                 </div>
                                 <div className="btn-group" role="group">
-                                    <button onClick={this.addFriend} type="button" className="btn btn-outline-primary">
-                                        Add Friend
-                                    </button>
+                                    <this.FriendButton />
                                 </div>
                             </div>
 
