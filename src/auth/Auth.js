@@ -30,10 +30,10 @@ export default class Auth {
                 if (yakId !== null) {
                     resolve(yakId)
 
-                /*
-                    Use the Auth0 userInfo() method to request the user's social
-                    OpenId profile
-                */
+                    /*
+                        Use the Auth0 userInfo() method to request the user's social
+                        OpenId profile
+                    */
                 } else {
                     const accessToken = this.getAccessToken()
                     this.auth0.client.userInfo(accessToken, (err, profile) => {
@@ -54,11 +54,11 @@ export default class Auth {
                                 },
                                 body: JSON.stringify(profile)
                             })
-                            .then(user => user.json())
-                            .then(user => {
-                                localStorage.setItem("yakId", user.id)
-                                resolve(user.id)
-                            })
+                                .then(user => user.json())
+                                .then(user => {
+                                    localStorage.setItem("yakId", user.id)
+                                    resolve(user.id)
+                                })
                         }
                     })
                 }
@@ -66,24 +66,20 @@ export default class Auth {
         )
     }
 
-    checkAuthentication = (currentView) => {
-        if (localStorage.getItem("id_token") === null && currentView !== "register") {
-            this.auth0.parseHash((err, authResult) => {
-                if (err) {
-                    console.log(err)
-                }
-                if (authResult && authResult.accessToken && authResult.idToken) {
-                    localStorage.setItem('access_token', authResult.accessToken);
-                    localStorage.setItem('id_token', authResult.idToken);
-                    localStorage.setItem('expires_at', JSON.stringify((authResult.expiresIn * 1000) + new Date().getTime()));
-                    return true
-                } else {
-                    return this.auth0.authorize()
-                }
-            })
-        } else if (localStorage.getItem("id_token") !== null) {
-            return true
-        }
+    checkAuthentication = () => {
+        this.auth0.parseHash((err, authResult) => {
+            if (err) {
+                console.log(err)
+            }
+            if (authResult && authResult.accessToken && authResult.idToken) {
+                localStorage.setItem('access_token', authResult.accessToken);
+                localStorage.setItem('id_token', authResult.idToken);
+                localStorage.setItem('expires_at', JSON.stringify((authResult.expiresIn * 1000) + new Date().getTime()));
+                return true
+            } else {
+                return this.auth0.authorize()
+            }
+        })
     }
 
     logout() {

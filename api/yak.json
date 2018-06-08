@@ -56,6 +56,18 @@
       "locale": "en",
       "updated_at": "2018-06-08T17:14:50.607Z",
       "id": 6
+    },
+    {
+      "sub": "google-oauth2|104692490782884191605",
+      "given_name": "Steve",
+      "family_name": "Brownlee",
+      "nickname": "chortlehoort",
+      "name": "Steve Brownlee",
+      "picture": "https://lh6.googleusercontent.com/-Fu2HawFGmbI/AAAAAAAAAAI/AAAAAAAAXTM/NF_Cn-nBAjE/photo.jpg",
+      "gender": "male",
+      "locale": "en",
+      "updated_at": "2018-06-08T19:22:18.708Z",
+      "id": 7
     }
   ],
   "friends": [

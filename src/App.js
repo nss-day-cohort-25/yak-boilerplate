@@ -21,8 +21,7 @@ class App extends Component {
         this.state = {
             currentView: "login",
             searchTerms: "",
-            activeUser: localStorage.getItem("id_token"),
-            yakId: localStorage.getItem("yakId"),
+            activeUser: localStorage.getItem("activeUser"),
             foundItems: {
                 posts: [],
                 users: []
@@ -141,28 +140,26 @@ class App extends Component {
         }
     }
 
-
-    View = () => {
-        const loggedIn = this.auth.checkAuthentication(this.state.currentView)
-        if (loggedIn === true) {
-            if (this.state.yakId === null) {
+    componentDidMount () {
+        if (this.state.activeUser === null) {
+            if (this.auth.checkAuthentication() === true) {
                 this.auth.getProfile().then(id => {
+                    localStorage.setItem("activeUser", id)
                     this.setState({
                         currentView: "home",
-                        activeUser: localStorage.getItem("id_token"),
-                        yakId: id
+                        activeUser: id
                     })
                 })
-            } else {
-                if (this.state.currentView === "login") {
-                    this.setState({
-                        currentView: "home",
-                        activeUser: localStorage.getItem("id_token")
-                    })
-                }
             }
-        } else {
-            return <div></div>
+        }
+    }
+
+
+    View = () => {
+
+        if (localStorage.getItem("id_token") === null && this.state.currentView !== "register") {
+            return <div>Please log in first</div>
+
         }
 
         if (localStorage.getItem("id_token") === null && this.state.currentView === "register") {
