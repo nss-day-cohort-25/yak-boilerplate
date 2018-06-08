@@ -21,7 +21,7 @@ class App extends Component {
         this.state = {
             currentView: "login",
             searchTerms: "",
-            activeUser: localStorage.getItem("activeUser"),
+            activeUser: localStorage.getItem("yakId"),
             foundItems: {
                 posts: [],
                 users: []
@@ -50,7 +50,7 @@ class App extends Component {
                     fetch(`${Settings.remoteURL}/users?${allFriendships}`)
                         .then(r => r.json())
                         .then(users => {
-                            notes = notes.concat(users.map(u => `${u.name.first} ${u.name.last} has sent you a friend request`))
+                            notes = notes.concat(users.map(u => `${u.name} has sent you a friend request`))
                             this.setState({
                                 notifications: notes
                             })
@@ -166,30 +166,30 @@ class App extends Component {
 
 
     View = () => {
-
-        if (localStorage.getItem("yakId") === null && this.state.currentView !== "register") {
-            return <div>Please log in first</div>
+        /*
+            If no localStorage yakId, then user is unauthenticated. Show basic
+            login message and `componentDidMount` with handle authenticating the
+            user via Auth0
+        */
+        if (localStorage.getItem("yakId") === null) {
+            return <div style="marginTop: `125px`">Please log in first</div>
         }
 
-        if (localStorage.getItem("yakId") === null && this.state.currentView === "register") {
-            return <Register showView={this.showView} setActiveUser={this.setActiveUser} />
-        } else {
-            switch (this.state.currentView) {
-                case "searching":
-                    return <this.SearchingView />
-                case "profile":
-                    return <Profile {...this.state.viewProps}
-                        activeUser={this.state.activeUser}
-                        viewHandler={this.showView} />
-                case "logout":
-                    this.auth.logout()
-                    this.setState({ currentView: "login" })
-                case "results":
-                    return <SearchResults foundItems={this.state.foundItems} viewHandler={this.showView} />
-                case "home":
-                default:
-                    return <Home activeUser={this.state.activeUser} viewHandler={this.showView} />
-            }
+        switch (this.state.currentView) {
+            case "searching":
+                return <this.SearchingView />
+            case "profile":
+                return <Profile {...this.state.viewProps}
+                    activeUser={this.state.activeUser}
+                    viewHandler={this.showView} />
+            case "logout":
+                this.auth.logout()
+                this.setState({ currentView: "login" })
+            case "results":
+                return <SearchResults foundItems={this.state.foundItems} viewHandler={this.showView} />
+            case "home":
+            default:
+                return <Home activeUser={this.state.activeUser} viewHandler={this.showView} />
         }
     }
 

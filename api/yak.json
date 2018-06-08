@@ -13,8 +13,14 @@
       "id": 8
     }
   ],
-  "friends": [ ],
-  "posts": [ ],
+  "friends": [],
+  "posts": [
+    {
+      "message": "Hi this is Steve",
+      "userId": 8,
+      "id": 1
+    }
+  ],
   "events": [],
   "ads": [
     {

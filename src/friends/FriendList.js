@@ -72,7 +72,7 @@ export default class FriendList extends Component {
                                 <a className="card-title friendList__name"
                                    id={`friend--${u.id}`}
                                    onClick={this.showProfile}
-                                   href="#">{u.name.first} {u.name.last}</a>
+                                   href="#">{u.name}</a>
                             </div>
                         </div>
                     )

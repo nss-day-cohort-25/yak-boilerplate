@@ -68,17 +68,17 @@ export default class Profile extends Component {
                 if (posts.length) {
                     this.setState({
                         posts: posts,
-                        name: `${posts[0].user.name.first} ${posts[0].user.name.last}`
+                        name: `${posts[0].user.name}`
                     })
 
-                    // User had no posts, query user table directly
+                // User had no posts, query user table directly
                 } else {
                     fetch(`${Settings.remoteURL}/users/${this.props.userId}`)
                         .then(r => r.json())
                         .then(u => {
                             this.setState({
                                 posts: posts,
-                                name: `${u.name.first} ${u.name.last}`
+                                name: `${u.name}`
                             })
                         })
                 }
