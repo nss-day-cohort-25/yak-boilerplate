@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import auth0 from "auth0-js/build/auth0";
-import Settings from "./Settings"
 import "bootstrap/dist/css/bootstrap.min.css"
 import './App.css'
+import Settings from "./Settings"
 import NavBar from './nav/NavBar';
 import Home from './newsfeed/Home';
 import Login from './auth/Login';
@@ -14,6 +14,8 @@ import Auth from './auth/Auth.js'
 class App extends Component {
     constructor(props) {
         super(props)
+
+        this.auth = new Auth()
 
         // Set initial state
         this.state = {
@@ -29,15 +31,6 @@ class App extends Component {
 
         this.getNotifications()
     }
-
-    auth0 = new auth0.WebAuth({
-        domain: "bagoloot.auth0.com",
-        clientID: "RUe9qoLtI2fOjc21FpE460NThgWKUKST",
-        redirectUri: "http://localhost:3000/",
-        audience: "https://bagoloot.auth0.com/userinfo",
-        responseType: "token id_token",
-        scope: "openid"
-    });
 
     SearchingView = () => (<h1 style={{ marginTop: `125px` }}>Searching...</h1>)
 
@@ -148,35 +141,17 @@ class App extends Component {
         }
     }
 
-    checkAuthentication = () => {
-        if (localStorage.getItem("id_token") === null && this.state.currentView !== "register") {
-            this.auth0.parseHash((err, authResult) => {
-                if (err) {
-                    console.log(err)
-                }
-                if (authResult && authResult.accessToken && authResult.idToken) {
-                    localStorage.setItem('access_token', authResult.accessToken);
-                    localStorage.setItem('id_token', authResult.idToken);
-                    localStorage.setItem('expires_at', JSON.stringify((authResult.expiresIn * 1000) + new Date().getTime()));
-                    return true
-                } else {
-                    const auth = new Auth()
-                    return auth.login()
-                }
-            })
-        }
-    }
 
     View = () => {
-        if (this.checkAuthentication() === true) {
+        if (this.auth.checkAuthentication(this.state.currentView) === true) {
             this.setState({
-                currentView: "home"
+                currentView: "home",
+                activeUser: localStorage.getItem("id_token")
             })
         }
 
         if (localStorage.getItem("id_token") === null && this.state.currentView === "register") {
-            return <Register showView={this.showView}
-                setActiveUser={this.setActiveUser} />
+            return <Register showView={this.showView} setActiveUser={this.setActiveUser} />
         } else {
             switch (this.state.currentView) {
                 case "searching":
@@ -186,15 +161,13 @@ class App extends Component {
                         activeUser={this.state.activeUser}
                         viewHandler={this.showView} />
                 case "logout":
-                    return <Login showView={this.showView}
-                        setActiveUser={this.setActiveUser} />
+                    this.auth.logout()
+                    this.setState({ currentView: "login" })
                 case "results":
-                    return <SearchResults foundItems={this.state.foundItems}
-                        viewHandler={this.showView} />
+                    return <SearchResults foundItems={this.state.foundItems} viewHandler={this.showView} />
                 case "home":
                 default:
-                    return <Home activeUser={this.state.activeUser}
-                        viewHandler={this.showView} />
+                    return <Home activeUser={this.state.activeUser} viewHandler={this.showView} />
             }
         }
     }
