@@ -97,9 +97,9 @@ class App extends Component {
     // Function to update local storage and set activeUser state
     setActiveUser = (val) => {
         if (val) {
-            localStorage.setItem("id_token", val)
+            localStorage.setItem("yakId", val)
         } else {
-            localStorage.removeItem("id_token")
+            localStorage.removeItem("yakId")
         }
         this.setState({
             activeUser: val,
@@ -140,29 +140,38 @@ class App extends Component {
         }
     }
 
-    componentDidMount () {
+    componentDidMount() {
+        // Do I have an active user?
         if (this.state.activeUser === null) {
-            if (this.auth.checkAuthentication() === true) {
-                this.auth.getProfile().then(id => {
-                    localStorage.setItem("activeUser", id)
-                    this.setState({
-                        currentView: "home",
-                        activeUser: id
+
+            // Check if user currently authenticated, or have redirected from Auth0 login
+            this.auth.checkAuthentication().then(authenticated => {
+                if (authenticated) {
+                    // Authentication via Auth0 succeeded, now get user's social profile
+                    this.auth.getProfile().then(id => {
+
+                        // Got profile and POSTed to API, store API id
+                        localStorage.setItem("yakId", id)
+
+                        // Change state to update DOM
+                        this.setState({
+                            currentView: "home",
+                            activeUser: id
+                        })
                     })
-                })
-            }
+                }
+            })
         }
     }
 
 
     View = () => {
 
-        if (localStorage.getItem("id_token") === null && this.state.currentView !== "register") {
+        if (localStorage.getItem("yakId") === null && this.state.currentView !== "register") {
             return <div>Please log in first</div>
-
         }
 
-        if (localStorage.getItem("id_token") === null && this.state.currentView === "register") {
+        if (localStorage.getItem("yakId") === null && this.state.currentView === "register") {
             return <Register showView={this.showView} setActiveUser={this.setActiveUser} />
         } else {
             switch (this.state.currentView) {

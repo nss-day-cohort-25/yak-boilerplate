@@ -67,19 +67,44 @@ export default class Auth {
     }
 
     checkAuthentication = () => {
-        this.auth0.parseHash((err, authResult) => {
-            if (err) {
-                console.log(err)
+        return new Promise(
+            (resolve, reject) => {
+                if (localStorage.getItem("yakId") === null) {
+                    this.redirectedFromAuth0().then(haveTokens => {
+                        if (!haveTokens) {
+                            this.auth0.authorize()
+                            resolve(false)
+                        } else {
+                            resolve(true)
+                        }
+                    })
+                } else {
+                    resolve(true)
+                }
             }
-            if (authResult && authResult.accessToken && authResult.idToken) {
-                localStorage.setItem('access_token', authResult.accessToken);
-                localStorage.setItem('id_token', authResult.idToken);
-                localStorage.setItem('expires_at', JSON.stringify((authResult.expiresIn * 1000) + new Date().getTime()));
-                return true
-            } else {
-                return this.auth0.authorize()
+        )
+    }
+
+    redirectedFromAuth0 = () => {
+        return new Promise(
+            (resolve, reject) => {
+                this.auth0.parseHash((err, authResult) => {
+                    if (err) {
+                        console.log(err)
+                        reject(err)
+                    }
+                    if (authResult && authResult.accessToken && authResult.idToken) {
+                        localStorage.setItem('access_token', authResult.accessToken);
+                        localStorage.setItem('id_token', authResult.idToken);
+                        localStorage.setItem('expires_at', JSON.stringify((authResult.expiresIn * 1000) + new Date().getTime()));
+                        resolve(true)
+                    } else {
+                        resolve(false)
+                    }
+                })
+
             }
-        })
+        )
     }
 
     logout() {
