@@ -44,6 +44,18 @@
       },
       "password": "me",
       "id": 4
+    },
+    {
+      "sub": "google-oauth2|104692490782884191605",
+      "given_name": "Steve",
+      "family_name": "Brownlee",
+      "nickname": "chortlehoort",
+      "name": "Steve Brownlee",
+      "picture": "https://lh6.googleusercontent.com/-Fu2HawFGmbI/AAAAAAAAAAI/AAAAAAAAXTM/NF_Cn-nBAjE/photo.jpg",
+      "gender": "male",
+      "locale": "en",
+      "updated_at": "2018-06-08T17:14:50.607Z",
+      "id": 6
     }
   ],
   "friends": [
@@ -154,6 +166,16 @@
       "message": "I taught at Nashville Software School",
       "userId": 5,
       "id": 14
+    },
+    {
+      "message": "Hi, I'm steve",
+      "userId": null,
+      "id": 15
+    },
+    {
+      "message": "Hello",
+      "userId": null,
+      "id": 16
     }
   ],
   "events": [],

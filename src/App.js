@@ -22,6 +22,7 @@ class App extends Component {
             currentView: "login",
             searchTerms: "",
             activeUser: localStorage.getItem("id_token"),
+            yakId: localStorage.getItem("yakId"),
             foundItems: {
                 posts: [],
                 users: []
@@ -56,7 +57,6 @@ class App extends Component {
                             })
                         })
                 }
-
             })
 
 
@@ -143,11 +143,26 @@ class App extends Component {
 
 
     View = () => {
-        if (this.auth.checkAuthentication(this.state.currentView) === true) {
-            this.setState({
-                currentView: "home",
-                activeUser: localStorage.getItem("id_token")
-            })
+        const loggedIn = this.auth.checkAuthentication(this.state.currentView)
+        if (loggedIn === true) {
+            if (this.state.yakId === null) {
+                this.auth.getProfile().then(id => {
+                    this.setState({
+                        currentView: "home",
+                        activeUser: localStorage.getItem("id_token"),
+                        yakId: id
+                    })
+                })
+            } else {
+                if (this.state.currentView === "login") {
+                    this.setState({
+                        currentView: "home",
+                        activeUser: localStorage.getItem("id_token")
+                    })
+                }
+            }
+        } else {
+            return <div></div>
         }
 
         if (localStorage.getItem("id_token") === null && this.state.currentView === "register") {
