@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import auth0 from "auth0-js/build/auth0";
 import Settings from "./Settings"
 import "bootstrap/dist/css/bootstrap.min.css"
 import './App.css'
@@ -8,16 +9,17 @@ import Login from './auth/Login';
 import SearchResults from './search/SearchResults';
 import Profile from './user/Profile';
 import Register from './auth/Register';
+import Auth from './auth/Auth.js'
 
 class App extends Component {
-    constructor (props) {
+    constructor(props) {
         super(props)
 
         // Set initial state
         this.state = {
             currentView: "login",
             searchTerms: "",
-            activeUser: localStorage.getItem("yakId"),
+            activeUser: localStorage.getItem("id_token"),
             foundItems: {
                 posts: [],
                 users: []
@@ -26,12 +28,18 @@ class App extends Component {
         }
 
         this.getNotifications()
-
     }
 
+    auth0 = new auth0.WebAuth({
+        domain: "bagoloot.auth0.com",
+        clientID: "RUe9qoLtI2fOjc21FpE460NThgWKUKST",
+        redirectUri: "http://localhost:3000/",
+        audience: "https://bagoloot.auth0.com/userinfo",
+        responseType: "token id_token",
+        scope: "openid"
+    });
 
     SearchingView = () => (<h1 style={{ marginTop: `125px` }}>Searching...</h1>)
-
 
     getNotifications = () => {
         let notes = []
@@ -42,8 +50,8 @@ class App extends Component {
             .then(relationships => {
                 if (relationships.length) {
                     const allFriendships = relationships.map(r => r.requestingFriendId)
-                            .map(id => `id=${id}`)
-                            .join("&")
+                        .map(id => `id=${id}`)
+                        .join("&")
 
                     // Query users table for all matching friends
                     fetch(`${Settings.remoteURL}/users?${allFriendships}`)
@@ -97,9 +105,9 @@ class App extends Component {
     // Function to update local storage and set activeUser state
     setActiveUser = (val) => {
         if (val) {
-            localStorage.setItem("yakId", val)
+            localStorage.setItem("id_token", val)
         } else {
-            localStorage.removeItem("yakId")
+            localStorage.removeItem("id_token")
         }
         this.setState({
             activeUser: val,
@@ -138,44 +146,55 @@ class App extends Component {
             })
             this.getNotifications()
         }
-
     }
 
-    /*
-        Function to determine which main view to render. This, very likely,
-        should be broken out into its own module.
+    checkAuthentication = () => {
+        if (localStorage.getItem("id_token") === null && this.state.currentView !== "register") {
+            this.auth0.parseHash((err, authResult) => {
+                if (err) {
+                    console.log(err)
+                }
+                if (authResult && authResult.accessToken && authResult.idToken) {
+                    localStorage.setItem('access_token', authResult.accessToken);
+                    localStorage.setItem('id_token', authResult.idToken);
+                    localStorage.setItem('expires_at', JSON.stringify((authResult.expiresIn * 1000) + new Date().getTime()));
+                    return true
+                } else {
+                    const auth = new Auth()
+                    return auth.login()
+                }
+            })
+        }
+    }
 
-        TODO:
-            1. Profile view
-            2. Register view
-            3. Create event view
-            4. Make this function its own module
-    */
     View = () => {
-        if (localStorage.getItem("yakId") === null && this.state.currentView !== "register") {
-            return <Login showView={this.showView}
-                          setActiveUser={this.setActiveUser} />
-        } else if (localStorage.getItem("yakId") === null && this.state.currentView === "register") {
+        if (this.checkAuthentication() === true) {
+            this.setState({
+                currentView: "home"
+            })
+        }
+
+        if (localStorage.getItem("id_token") === null && this.state.currentView === "register") {
             return <Register showView={this.showView}
-                             setActiveUser={this.setActiveUser} />
+                setActiveUser={this.setActiveUser} />
         } else {
             switch (this.state.currentView) {
                 case "searching":
                     return <this.SearchingView />
                 case "profile":
                     return <Profile {...this.state.viewProps}
-                                    activeUser={this.state.activeUser}
-                                    viewHandler={this.showView} />
+                        activeUser={this.state.activeUser}
+                        viewHandler={this.showView} />
                 case "logout":
                     return <Login showView={this.showView}
-                                  setActiveUser={this.setActiveUser} />
+                        setActiveUser={this.setActiveUser} />
                 case "results":
                     return <SearchResults foundItems={this.state.foundItems}
-                                          viewHandler={this.showView} />
+                        viewHandler={this.showView} />
                 case "home":
                 default:
                     return <Home activeUser={this.state.activeUser}
-                                 viewHandler={this.showView} />
+                        viewHandler={this.showView} />
             }
         }
     }
