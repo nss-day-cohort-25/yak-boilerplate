@@ -21,64 +21,87 @@ export default class Auth {
     }
 
     getProfile = () => {
-        return new Promise(
-            (resolve, reject) => {
-                // Check if the user's Yak API id is set in local storage
-                const yakId = localStorage.getItem("yakId")
+        return new Promise((resolve, reject) => {
+            // Check if the user's Yak API id is set in local storage
+            const yakId = localStorage.getItem("yakId")
 
-                // If it's set, resolve with the API id
-                if (yakId !== null) {
-                    resolve(yakId)
+            // If it's set, resolve with the API id
+            if (yakId !== null) {
+                resolve(yakId)
+
+                /*
+                    Use the Auth0 userInfo() method to request the user's social
+                    OpenId profile
+                */
+            } else {
+                const accessToken = this.getAccessToken()
+                this.auth0.client.userInfo(accessToken, (err, profile) => {
+                    if (err) {
+                        reject(err)
+                    }
 
                     /*
-                        Use the Auth0 userInfo() method to request the user's social
-                        OpenId profile
+                        If the user's OpenId profile was successfully retrieved,
+                        create an entry in the Yak API user table and resolve
+                        with the new id
                     */
-                } else {
-                    const accessToken = this.getAccessToken()
-                    this.auth0.client.userInfo(accessToken, (err, profile) => {
-                        if (err) {
-                            reject(err)
-                        }
+                    if (profile) {
 
                         /*
-                            If the user's OpenId profile was successfully retrieved,
-                            create an entry in the Yak API user table and resolve
-                            with the new id
+                            Check if the user already has a profile in the Yak API
                         */
-                        if (profile) {
-                            fetch(`${Settings.remoteURL}/users`, {
-                                method: "POST",
-                                headers: {
-                                    "Content-Type": "application/json"
-                                },
-                                body: JSON.stringify(profile)
+                        fetch(`${Settings.remoteURL}/users?sub=${profile.sub}`)
+                            .then(u => u.json())
+                            .then(users => {
+
+                                // User already has profile in API, resolve with the id
+                                if (users.length) {
+                                    resolve(users[0].id)
+
+                                // User not in API, so POST new profile
+                                } else {
+                                    fetch(`${Settings.remoteURL}/users`, {
+                                        method: "POST",
+                                        headers: {
+                                            "Content-Type": "application/json"
+                                        },
+                                        body: JSON.stringify(profile)
+                                    })
+                                        .then(user => user.json())
+                                        .then(user => {
+                                            // Put new user's id in localStorage
+                                            localStorage.setItem("yakId", user.id)
+
+                                            // Resolve the promise with the new id
+                                            resolve(user.id)
+                                        })
+                                }
                             })
-                                .then(user => user.json())
-                                .then(user => {
-                                    localStorage.setItem("yakId", user.id)
-                                    resolve(user.id)
-                                })
-                        }
-                    })
-                }
+                    }
+                })
             }
+        }
         )
     }
 
     checkAuthentication = () => {
         return new Promise(
             (resolve, reject) => {
+                // Check if the `yakId` key is set in localStorage.
                 if (localStorage.getItem("yakId") === null) {
+                    // Check if the app has been redirected back from Auth0.
                     this.redirectedFromAuth0().then(haveTokens => {
                         if (!haveTokens) {
+                            // No tokens in URL, redirect to Auth0 login.
                             this.auth0.authorize()
                             resolve(false)
                         } else {
+                            // Get rid of all the tokens sent back by Auth0
                             window.history.pushState({}, "Yak Social Network", "#");
                             resolve(true)
                         }
                     })
+                    // yakId is in localStorage. Resolve promise.
                 } else {
                     resolve(true)
                 }

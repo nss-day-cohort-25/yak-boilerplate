@@ -67,7 +67,7 @@ export default class FriendList extends Component {
                 {
                     this.state.friends.map(u =>
                         <div className="card" key={u.id}>
-                            <img className="card-img-top avatar" src={Avatar} alt="Generic person image" />
+                            <img className="card-img-top avatar" src={u.picture} alt="Generic person image" />
                             <div className="card-body">
                                 <a className="card-title friendList__name"
                                    id={`friend--${u.id}`}

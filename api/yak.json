@@ -11,14 +11,79 @@
       "locale": "en",
       "updated_at": "2018-06-08T20:48:41.645Z",
       "id": 8
+    },
+    {
+      "sub": "google-oauth2|104692490782884191618",
+      "given_name": "Joe",
+      "family_name": "Shepherd",
+      "nickname": "joeshep",
+      "name": "Joe Shepherd",
+      "picture": "https://lh3.googleusercontent.com/Ye08EmtGKL7442gCcpXYmYUmAJTsX2twfDKk9CIVOYMPVthfVwK78rnODRIwCp2cW1p0V2ZkR4Uecw=s577-rw-no",
+      "gender": "male",
+      "locale": "en",
+      "updated_at": "2018-06-08T20:48:41.645Z",
+      "id": 9
+    },
+    {
+      "sub": "google-oauth2|104692490782884191606",
+      "given_name": "Meg",
+      "family_name": "Ducharme",
+      "nickname": "megducharme",
+      "name": "Meg Ducharme",
+      "picture": "https://lh3.googleusercontent.com/esf4fDZ8gg6TlzO3Qbh8pQgPdqu76yiZVO40KvNrJLWuHLq2JKDiP_vvXxY6E_QXYnzIWQXiL0_RAw=w1171-h1168-rw-no",
+      "gender": "female",
+      "locale": "en",
+      "updated_at": "2018-06-08T20:48:41.645Z",
+      "id": 1
+    },
+    {
+      "sub": "google-oauth2|114447427911375071246",
+      "given_name": "Steve",
+      "family_name": "Brownlee",
+      "nickname": "steve",
+      "name": "Steve Brownlee",
+      "picture": "https://lh5.googleusercontent.com/-xKN_6LITeoU/AAAAAAAAAAI/AAAAAAAAA7s/0t53_QkYxDY/photo.jpg",
+      "locale": "en",
+      "updated_at": "2018-06-08T23:54:55.616Z",
+      "id": 10
     }
   ],
-  "friends": [],
+  "friends": [
+    {
+      "requestingFriendId": 1,
+      "acceptedFriendId": 8,
+      "pending": true,
+      "id": 1
+    },
+    {
+      "requestingFriendId": 8,
+      "acceptedFriendId": 9,
+      "pending": false,
+      "id": 2
+    },
+    {
+      "requestingFriendId": 8,
+      "acceptedFriendId": 1,
+      "pending": false,
+      "id": 3
+    },
+    {
+      "requestingFriendId": 10,
+      "acceptedFriendId": 8,
+      "pending": true,
+      "id": 4
+    }
+  ],
   "posts": [
     {
       "message": "Hi this is Steve",
       "userId": 8,
       "id": 1
+    },
+    {
+      "message": "I logged in via Google",
+      "userId": 8,
+      "id": 2
     }
   ],
   "events": [],

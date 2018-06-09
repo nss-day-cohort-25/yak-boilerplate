@@ -28,17 +28,13 @@ class App extends Component {
             },
             notifications: []
         }
-
-        this.getNotifications()
     }
 
     SearchingView = () => (<h1 style={{ marginTop: `125px` }}>Searching...</h1>)
 
-    getNotifications = () => {
-        let notes = []
-
+    getNotifications = (id) => {
         // Any pending friend requests
-        return fetch(`${Settings.remoteURL}/friends?acceptedFriendId=${this.state.activeUser}&pending=true`)
+        return fetch(`${Settings.remoteURL}/friends?acceptedFriendId=${id}&pending=true`)
             .then(r => r.json())
             .then(relationships => {
                 if (relationships.length) {
@@ -47,13 +43,10 @@ class App extends Component {
                         .join("&")
 
                     // Query users table for all matching friends
-                    fetch(`${Settings.remoteURL}/users?${allFriendships}`)
+                    return fetch(`${Settings.remoteURL}/users?${allFriendships}`)
                         .then(r => r.json())
                         .then(users => {
-                            notes = notes.concat(users.map(u => `${u.name} has sent you a friend request`))
-                            this.setState({
-                                notifications: notes
-                            })
+                            return users.map(u => `${u.name} has sent you a friend request`)
                         })
                 }
             })
@@ -66,7 +59,7 @@ class App extends Component {
 
 
     // Search handler -> passed to NavBar
-    performSearch = function (terms) {
+    performSearch = terms => {
         this.setState({
             searchTerms: terms,
             currentView: "searching"
@@ -92,7 +85,7 @@ class App extends Component {
 
                 }, 1000);
             })
-    }.bind(this)
+    }
 
     // Function to update local storage and set activeUser state
     setActiveUser = (val) => {
@@ -116,7 +109,7 @@ class App extends Component {
         if (e.hasOwnProperty("target")) {
             view = e.target.id.split("__")[1]
 
-            // View switch manually triggered by passing in string
+        // View switch manually triggered by passing in string
         } else {
             view = e
         }
@@ -131,12 +124,14 @@ class App extends Component {
                 viewProps: Object.assign({}, ...props)
             })
         } else {
-            // Update state to correct view will be rendered
-            this.setState({
-                currentView: view,
-                viewProps: Object.assign({}, ...props)
+            this.getNotifications().then(notes => {
+                // Update state to correct view will be rendered
+                this.setState({
+                    currentView: view,
+                    viewProps: Object.assign({}, ...props),
+                    notifications: notes
+                })
             })
-            this.getNotifications()
         }
     }
 
@@ -153,13 +148,25 @@ class App extends Component {
                         // Got profile and POSTed to API, store API id
                         localStorage.setItem("yakId", id)
 
-                        // Change state to update DOM
-                        this.setState({
-                            currentView: "home",
-                            activeUser: id
+                        this.getNotifications(id).then(notes => {
+                            // Update state so correct view will be rendered
+                            this.setState({
+                                currentView: "home",
+                                activeUser: id,
+                                notifications: notes
+                            })
                         })
                     })
                 }
+            })
+
+        // activeUser loaded from localStorage. Get notifications for user.
+        } else {
+            this.getNotifications(this.state.activeUser).then(notes => {
+                // Update state so correct view will be rendered
+                this.setState({
+                    notifications: notes
+                })
             })
         }
     }
@@ -172,9 +179,12 @@ class App extends Component {
             user via Auth0
         */
         if (localStorage.getItem("yakId") === null) {
-            return <div style="marginTop: `125px`">Please log in first</div>
+            return <h2 style={{marginTop: `125px`}}>Please log in first</h2>
         }
 
+        /*
+            User is authenticated, so load the view specified
+        */
         switch (this.state.currentView) {
             case "searching":
                 return <this.SearchingView />
@@ -184,6 +194,7 @@ class App extends Component {
                     viewHandler={this.showView} />
             case "logout":
                 this.auth.logout()
+                this.setActiveUser(null)
                 this.setState({ currentView: "login" })
             case "results":
                 return <SearchResults foundItems={this.state.foundItems} viewHandler={this.showView} />
